@@ -27,27 +27,27 @@
   </select>
   <output name="output-temp" id="output-temp" for="input-temp input-unit output-unit">68 F</output>
 </form>
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtVuqNwfVYH2VfGavpPmuD-X2c_MMx_WI",
+    authDomain: "temperature-af4da.firebaseapp.com",
+    projectId: "temperature-af4da",
+    storageBucket: "temperature-af4da.firebasestorage.app",
+    messagingSenderId: "540352892566",
+    appId: "1:540352892566:web:4dc064e376da2f8c72fcb7"
+  };
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBtO0OF7eY49Sk4VxEMYTDaiEJpSUy9b8k",
-  authDomain: "food-ninja-pwa-22cf9.firebaseapp.com",
-  projectId: "food-ninja-pwa-22cf9",
-  storageBucket: "food-ninja-pwa-22cf9.firebasestorage.app",
-  messagingSenderId: "721446035729",
-  appId: "1:721446035729:web:8511acc2c23aedd8812cb0"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
     <script src="converter.js"></script>
-    <script src="/js/db.js"></script>
+   
     <script> if('serviceWorker' in navigator) {navigator.serviceWorker.register('/sw.js', { scope: '/' });}</script>
   </body>
 </html>
