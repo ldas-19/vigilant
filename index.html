@@ -12,6 +12,18 @@
   </head>
   <body>
     <H1> Temperature Convertme</H1>
+    <form id="addItemForm">
+  <input type="text" id="itemName" placeholder="Enter item name" required />
+  <button type="submit">Add Item</button>
+</form>
+
+<script>
+  document.getElementById("addItemForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const itemName = document.getElementById("itemName").value;
+    addItemToDatabase(itemName);
+  });
+</script>
     <form id="converter">
   <label for="input-temp">temperature</label>
   <input type="text" id="input-temp" name="input-temp" value="20" />
