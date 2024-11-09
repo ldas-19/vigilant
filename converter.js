@@ -46,4 +46,16 @@ import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+ async function addItemToDatabase(itemName) {
+  try {
+    const docRef = await addDoc(collection(db, "items"), {
+      name: itemName,
+      createdAt: new Date().toISOString()
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
 });
