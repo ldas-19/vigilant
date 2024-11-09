@@ -48,7 +48,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
  async function addItemToDatabase(itemName) {
   try {
-    const docRef = await addDoc(collection(db, "items"), {
+    const docRef = await addDoc(collection(db, "Test"), {
       name: itemName,
       createdAt: new Date().toISOString()
     });
