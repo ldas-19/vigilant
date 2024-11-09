@@ -8,62 +8,119 @@
     <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
     <link rel="stylesheet" href="converter.css">
     <link rel="manifest" href="/manifest.json">
-    <title>Temperature converter Version 2</title>
+    <title>Temperature Converter Version 2</title>
   </head>
   <body>
-    <H1> Temperature Convertme</H1>
+    <h1>Temperature Convertme</h1>
+
+    <!-- Form to add an item to Firestore -->
     <form id="addItemForm">
-  <input type="text" id="itemName" placeholder="Enter item name" required />
-  <button type="submit">Add Item</button>
-</form>
+      <input type="text" id="itemName" placeholder="Enter item name" required />
+      <button type="submit">Add Item</button>
+    </form>
 
-<script>
-  document.getElementById("addItemForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const itemName = document.getElementById("itemName").value;
-    addItemToDatabase(itemName);
-  });
-</script>
+    <!-- Temperature converter form -->
     <form id="converter">
-  <label for="input-temp">temperature</label>
-  <input type="text" id="input-temp" name="input-temp" value="20" />
-  <label for="input-unit">from</label>
-  <select id="input-unit" name="input-unit">
-    <option value="c" selected>Celsius</option>
-    <option value="f">Fahrenheit</option>
-    <option value="k">Kelvin</option>
-  </select>
-  <label for="output-unit">to</label>
-  <select id="output-unit" name="output-unit">
-    <option value="c">Celsius</option>
-    <option value="f" selected>Fahrenheit</option>
-    <option value="k">Kelvin</option>
-  </select>
-  <output name="output-temp" id="output-temp" for="input-temp input-unit output-unit">68 F</output>
-</form>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+      <label for="input-temp">Temperature</label>
+      <input type="text" id="input-temp" name="input-temp" value="20" />
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBqVQ4T4bVb-S4UYnVHusfZ9LRgkXXfAsk",
-    authDomain: "temperature-converter-1b584.firebaseapp.com",
-    projectId: "temperature-converter-1b584",
-    storageBucket: "temperature-converter-1b584.firebasestorage.app",
-    messagingSenderId: "473240871501",
-    appId: "1:473240871501:web:83797ad4da671d45beb204"
-  };
+      <label for="input-unit">From</label>
+      <select id="input-unit" name="input-unit">
+        <option value="c" selected>Celsius</option>
+        <option value="f">Fahrenheit</option>
+        <option value="k">Kelvin</option>
+      </select>
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script> </script>
-    <script src="converter.js"></script>
-    <script> if('serviceWorker' in navigator) {navigator.serviceWorker.register('/sw.js', { scope: '/' });}</script>
-    
+      <label for="output-unit">To</label>
+      <select id="output-unit" name="output-unit">
+        <option value="c">Celsius</option>
+        <option value="f" selected>Fahrenheit</option>
+        <option value="k">Kelvin</option>
+      </select>
+
+      <output name="output-temp" id="output-temp" for="input-temp input-unit output-unit">68 F</output>
+    </form>
+
+    <script type="module">
+      // Import the necessary Firebase functions
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+      // Your Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBqVQ4T4bVb-S4UYnVHusfZ9LRgkXXfAsk",
+        authDomain: "temperature-converter-1b584.firebaseapp.com",
+        projectId: "temperature-converter-1b584",
+        storageBucket: "temperature-converter-1b584.firebasestorage.app",
+        messagingSenderId: "473240871501",
+        appId: "1:473240871501:web:83797ad4da671d45beb204"
+      };
+
+      // Initialize Firebase and Firestore
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Convert temperature function
+      function convertTemp(value, fromUnit, toUnit) {
+        if (fromUnit === 'c') {
+          if (toUnit === 'f') return value * 9 / 5 + 32;
+          if (toUnit === 'k') return value + 273.15;
+          return value;
+        }
+        if (fromUnit === 'f') {
+          if (toUnit === 'c') return (value - 32) * 5 / 9;
+          if (toUnit === 'k') return (value + 459.67) * 5 / 9;
+          return value;
+        }
+        if (fromUnit === 'k') {
+          if (toUnit === 'c') return value - 273.15;
+          if (toUnit === 'f') return value * 9 / 5 - 459.67;
+          return value;
+        }
+        return value; // If no valid conversion, return the input value
+      }
+
+      // Firestore: Add item function
+      async function addItemToDatabase(itemName) {
+        try {
+          const docRef = await addDoc(collection(db, "items"), {
+            name: itemName,
+            createdAt: new Date().toISOString()
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      }
+
+      // Handle the form submission for adding an item to the Firestore collection
+      document.getElementById("addItemForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const itemName = document.getElementById("itemName").value;
+        addItemToDatabase(itemName);
+      });
+
+      // Handle temperature conversion
+      const inputField = document.getElementById('input-temp');
+      const fromUnitField = document.getElementById('input-unit');
+      const toUnitField = document.getElementById('output-unit');
+      const outputField = document.getElementById('output-temp');
+
+      inputField.addEventListener('input', function() {
+        const inputTemp = parseFloat(inputField.value);
+        const fromUnit = fromUnitField.value;
+        const toUnit = toUnitField.value;
+
+        const outputTemp = convertTemp(inputTemp, fromUnit, toUnit);
+        outputField.value = (Math.round(outputTemp * 100) / 100) + ' ' + toUnit.toUpperCase();
+      });
+    </script>
+
+    <!-- Optionally register a Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      }
+    </script>
   </body>
 </html>
